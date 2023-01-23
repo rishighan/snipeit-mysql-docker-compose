@@ -12,8 +12,6 @@ Things you should consider changing:
 
 Most of the other configuration should work as-is
 
----
-
 ## Running the stack
 
 1. Run the stack with `docker-compose up -d`
