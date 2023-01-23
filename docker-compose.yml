@@ -1,0 +1,40 @@
+---
+version: "2.1"
+services:
+  snipe-it:
+    image: lscr.io/linuxserver/snipe-it:latest
+    container_name: snipe-it
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - APP_URL=<hostname>
+      - MYSQL_PORT_3306_TCP_ADDR=mysql
+      - MYSQL_PORT_3306_TCP_PORT=3306
+      - MYSQL_DATABASE=snipeit
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=<MySQL Root Password>
+      - TZ=US/Pacific
+    volumes:
+      - <SnipeIt data folder on the host>:/config
+    ports:
+      - 8087:80
+    depends_on:
+      - mysql
+    restart: unless-stopped
+    networks:
+      - app-tier
+
+  mysql:
+    image: 'bitnami/mysql:latest'
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+      - MYSQL_ROOT_USER=root
+      - MYSQL_ROOT_PASSWORD=<MySQL Root Password>
+      - MYSQL_DATABASE=snipeit
+    networks:
+      - app-tier
+    volumes:
+      - <MySQL data folder on the host>:/bitnami/mysql/data
+networks:
+  app-tier:
+    driver: bridge
